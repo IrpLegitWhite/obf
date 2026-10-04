@@ -1,0 +1,29 @@
+cmake_minimum_required(VERSION 3.15)
+
+project(test_dll CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# ★ Собираем DLL из исходника, который лежит РЯДОМ с этим CMakeLists.txt
+add_library(test_dll SHARED
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_dll.cpp"
+)
+
+target_compile_definitions(test_dll PRIVATE WIN32_LEAN_AND_MEAN)
+
+if(MSVC)
+    target_compile_options(test_dll PRIVATE /W4 /EHsc)
+endif()
+
+# ★ Куда класть результат — всегда в bin/ рядом с CMakeLists.txt
+set_target_properties(test_dll PROPERTIES
+    PREFIX ""
+    OUTPUT_NAME "test_dll"
+
+    RUNTIME_OUTPUT_DIRECTORY                 "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG           "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE         "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO  "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL      "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+)
